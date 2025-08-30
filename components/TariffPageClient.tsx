@@ -7,6 +7,7 @@ import { Car, Phone, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import BookingModal from "@/components/BookingModal";
+import PopularRoutes from "@/components/PopularRoutes"
 
 interface TariffItem {
   id: number;
@@ -210,6 +211,9 @@ export default function TariffPageClient({ tariffData }: TariffPageClientProps) 
           </div>
         </div>
       </section>
+
+      {/* Popular Routes inside Tariff page (before contact section) */}
+      <PopularRoutes title="Popular Routes" description="Book your drop taxi quickly from these top routes" />
 
       {/* Contact Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-white">

@@ -24,6 +24,7 @@ import {
   CheckCircle
 } from "lucide-react";
 import QuickBookForm from "@/components/QuickBookForm";
+import PopularRoutes from "@/components/PopularRoutes"
 
 // Static data for travel business
 const staticBanners = [
@@ -255,7 +256,7 @@ export default function CompleteHome() {
               transition={{ duration: 1 }}
             >
               <Image
-                src={banner.image}
+                src={banner.image || "/placeholder.svg"}
                 alt={banner.title}
                 fill
                 className="object-cover"
@@ -698,7 +699,7 @@ export default function CompleteHome() {
                   <CardContent className="p-0">
                     <div className="relative h-48 overflow-hidden rounded-t-lg">
                       <Image
-                        src={service.image}
+                        src={service.image || "/placeholder.svg"}
                         alt={service.title}
                         fill
                         className="object-cover"
@@ -848,6 +849,9 @@ export default function CompleteHome() {
           </div>
         </div>
       </section>
+
+            {/* Popular Routes Section */}
+      <PopularRoutes />
 
       {/* Testimonials Section */}
       <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-white relative overflow-hidden">

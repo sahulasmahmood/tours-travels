@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import PopularRoutes from "@/components/PopularRoutes"
 
 interface PackageItem {
   id: number;
@@ -240,6 +241,9 @@ export default function PackagesPageClient({ packagesData }: PackagesPageClientP
           </div>
         </div>
       </section>
+
+      {/* Popular Routes inside Packages page (after packages grid) */}
+      <PopularRoutes title="Popular Routes" description="Frequently booked city-to-city drop taxi routes" />
 
       {/* Custom Package Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-white">
