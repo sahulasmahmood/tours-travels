@@ -21,7 +21,7 @@ import {
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import FloatingContactButtons from "@/components/FloatingContactButtons"
-import { useSEOMeta } from "@/hooks/use-seo-meta"
+import { AboutPageSeo } from "@/components/About/AboutSeo"
 import { useBanner } from "@/hooks/use-banner"
 
 const fadeInUp = {
@@ -45,17 +45,6 @@ const scaleIn = {
 }
 
 export default function AboutPage() {
-  // Use SEO data for about page
-  useSEOMeta({
-    pageId: "about",
-    fallback: {
-      title: "About Vinushree Tours & Travels - Your Trusted Travel Partner",
-      description:
-        "Discover Vinushree Tours & Travels - your trusted partner for exploring Tamil Nadu. Learn about our mission, vision, and commitment to exceptional travel experiences.",
-      keywords: "about vinushree tours, travel company, Tamil Nadu tourism, travel services, tour operator",
-    },
-  })
-
   const { banner } = useBanner("about")
 
   const whyVinushree = [
@@ -136,6 +125,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen">
+      <AboutPageSeo />
       <Navbar />
 
       {/* Hero Section */}

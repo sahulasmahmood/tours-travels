@@ -3,13 +3,13 @@
 import { useSEOMeta } from "@/hooks/use-seo-meta"
 
 export function HomeSeo() {
-  // Use SEO data for services page
+  // Use SEO data for home page
   useSEOMeta({
     pageId: 'home',
     fallback: {
-      title: 'Filigree Solutions - Advanced CAD & CAE Services | Engineering Excellence',
-      description: 'Leading provider of CAD, CAE, structural analysis, and engineering simulation services across India. Expert solutions for automotive, telecom, and industrial sectors.',
-      keywords: 'CAD services, CAE analysis, structural analysis, 3D modeling, engineering simulation, FEA, automotive engineering, telecom analysis'
+      title: 'Vinushree Tours & Travels - Best Taxi Services in Tamil Nadu',
+      description: 'Book reliable taxi services, tour packages, and travel solutions across Tamil Nadu. One-way trips, round trips, airport taxi, and tour packages available 24/7.',
+      keywords: 'taxi service tamil nadu, tour packages, airport taxi, vinushree tours, chennai taxi, bangalore taxi, travel services, one way trip, round trip'
     }
   })
 

@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/providers/theme"
 import { DynamicFavicon } from "@/components/dynamic-favicon"
 import { GoogleAuthProvider } from '@/components/providers/google-auth-provider'
+import { SEOProvider } from '@/components/providers/seo-provider'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -26,10 +27,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className}>
         <ThemeProvider>
-          <DynamicFavicon />
-          <GoogleAuthProvider>
-            {children}
-          </GoogleAuthProvider>
+          <SEOProvider>
+            <DynamicFavicon />
+            <GoogleAuthProvider>
+              {children}
+            </GoogleAuthProvider>
+          </SEOProvider>
         </ThemeProvider>
         <Toaster  />
       </body>

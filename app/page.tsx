@@ -3,6 +3,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import CompleteHome from "@/components/Home/CompleteHome";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
+import { HomeSeo } from "@/components/Home/HomeSeo";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -118,6 +119,7 @@ const staticTestimonials = [
 export default function HomePage() {
   return (
     <div className="min-h-screen">
+      <HomeSeo />
       <Navbar />
       <CompleteHome />
       <Footer />

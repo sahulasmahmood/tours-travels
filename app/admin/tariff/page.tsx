@@ -46,6 +46,15 @@ import {
   Clock,
   MapPin
 } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface TariffService {
   _id?: string;
@@ -328,7 +337,6 @@ export default function TariffPage() {
     setDeletingButtonId(id);
     
     try {
-      // Get JWT token from localStorage
       const token = localStorage.getItem('admin_token');
       if (!token) {
         toast({
@@ -546,6 +554,146 @@ export default function TariffPage() {
       }
     };
     input.click();
+  };
+
+  // Add pagination rendering function
+  const renderPaginationItems = () => {
+    if (!pagination) return [];
+    
+    const items = [];
+    const { currentPage, totalPages } = pagination;
+
+    // Previous button
+    items.push(
+      <PaginationItem key="prev">
+        <PaginationPrevious
+          onClick={() => handlePageChange(currentPage - 1)}
+          className={
+            !pagination.hasPrevPage
+              ? "pointer-events-none opacity-50"
+              : "cursor-pointer"
+          }
+        />
+      </PaginationItem>
+    );
+
+    // Page numbers
+    if (totalPages <= 7) {
+      // Show all pages if total pages are 7 or less
+      for (let i = 1; i <= totalPages; i++) {
+        items.push(
+          <PaginationItem key={i}>
+            <PaginationLink
+              onClick={() => handlePageChange(i)}
+              isActive={currentPage === i}
+              className={`cursor-pointer ${
+                currentPage === i
+                  ? "bg-admin-gradient text-white border-0 hover:bg-admin-gradient"
+                  : ""
+              }`}
+            >
+              {i}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+    } else {
+      // Show first page
+      items.push(
+        <PaginationItem key={1}>
+          <PaginationLink
+            onClick={() => handlePageChange(1)}
+            isActive={currentPage === 1}
+            className={`cursor-pointer ${
+              currentPage === 1
+                ? "bg-admin-gradient text-white border-0 hover:bg-admin-gradient"
+                : ""
+            }`}
+          >
+            1
+          </PaginationLink>
+        </PaginationItem>
+      );
+
+      if (currentPage > 3) {
+        items.push(
+          <PaginationItem key="ellipsis1">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
+      }
+
+      // Show current page and surrounding pages
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        items.push(
+          <PaginationItem key={i}>
+            <PaginationLink
+              onClick={() => handlePageChange(i)}
+              isActive={currentPage === i}
+              className={`cursor-pointer ${
+                currentPage === i
+                  ? "bg-admin-gradient text-white border-0 hover:bg-admin-gradient"
+                  : ""
+              }`}
+            >
+              {i}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+
+      if (currentPage < totalPages - 2) {
+        items.push(
+          <PaginationItem key="ellipsis2">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
+      }
+
+      // Show last page
+      items.push(
+        <PaginationItem key={totalPages}>
+          <PaginationLink
+            onClick={() => handlePageChange(totalPages)}
+            isActive={currentPage === totalPages}
+            className={`cursor-pointer ${
+              currentPage === totalPages
+                ? "bg-admin-gradient text-white border-0 hover:bg-admin-gradient"
+                : ""
+            }`}
+          >
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    // Next button
+    items.push(
+      <PaginationItem key="next">
+        <PaginationNext
+          onClick={() => handlePageChange(currentPage + 1)}
+          className={
+            !pagination.hasNextPage
+              ? "pointer-events-none opacity-50"
+              : "cursor-pointer"
+          }
+        />
+      </PaginationItem>
+    );
+
+    return items;
+  };
+
+  // Add page change handler
+  const handlePageChange = (page: number) => {
+    if (pagination && page >= 1 && page <= pagination.totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   if (loading) {
@@ -1349,6 +1497,15 @@ export default function TariffPage() {
               </CardContent>
             </Card>
           ))}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="flex justify-center mt-8">
+          <Pagination>
+            <PaginationContent>{renderPaginationItems()}</PaginationContent>
+          </Pagination>
         </div>
       )}
 

@@ -2,6 +2,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
 import PackagesPageClient from "@/components/PackagesPageClient";
+import { PackagesPageSeo } from "@/components/Packages/PackagesSeo";
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +41,7 @@ export default async function PackagesPageRoute() {
 
   return (
     <div className="min-h-screen">
+      <PackagesPageSeo />
       <Navbar />
       <PackagesPageClient packagesData={packagesData || []} />
       <Footer />

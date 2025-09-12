@@ -2,6 +2,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
 import TariffPageClient from "@/components/TariffPageClient";
+import { TariffPageSeo } from "@/components/Tariff/TariffSeo";
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +41,7 @@ export default async function TariffPageRoute() {
 
   return (
     <div className="min-h-screen">
+      <TariffPageSeo />
       <Navbar />
       <TariffPageClient tariffData={tariffData || []} />
       <Footer />

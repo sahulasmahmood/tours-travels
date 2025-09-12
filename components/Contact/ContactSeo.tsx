@@ -3,13 +3,13 @@
 import { useSEOMeta } from "@/hooks/use-seo-meta"
 
 export function ContactPageSeo() {
-  // Use SEO data for services page
+  // Use SEO data for contact page
   useSEOMeta({
     pageId: 'contact',
     fallback: {
-        title: 'Contact Filigree Solutions - Get Engineering Consultation',
-        description: 'Contact our engineering experts for CAD, CAE, and structural analysis services. Located in Madurai, Tamil Nadu. Get quotes and consultations.',
-        keywords: 'contact filigree solutions, engineering consultation, CAD services quote, Madurai engineering, structural analysis contact'
+        title: 'Contact Vinushree Tours & Travels - Book Your Taxi Now',
+        description: 'Contact Vinushree Tours & Travels for taxi booking, tour packages, and travel inquiries. Available 24/7 for all your travel needs across Tamil Nadu.',
+        keywords: 'contact vinushree tours, taxi booking, travel inquiry, phone number, whatsapp booking, 24/7 service, customer support'
       }
   })
 

@@ -2,6 +2,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
 import { Contact } from "@/components/Contact/Contact";
+import { ContactPageSeo } from "@/components/Contact/ContactSeo";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -32,6 +33,7 @@ const travelServices = [
 export default function ContactPage() {
   return (
     <div className="min-h-screen">
+      <ContactPageSeo />
       <Navbar />
       <Contact />
       <Footer />
