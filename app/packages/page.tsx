@@ -18,14 +18,19 @@ export const metadata = {
 // Fetch packages from API
 async function getPackages() {
   try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
+    // Construct absolute URL for server-side fetching
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/packages`, {
       cache: 'no-store', // Always fetch fresh data
-      next: { revalidate: 0 }
+      next: { revalidate: 0 },
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     
     if (!response.ok) {
-      throw new Error('Failed to fetch packages');
+      console.error('Failed to fetch packages:', await response.text());
+      return [];
     }
     
     const result = await response.json();

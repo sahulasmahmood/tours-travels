@@ -9,9 +9,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   
   try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
+    // Construct absolute URL for server-side fetching
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/tariff`, {
       cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     
     if (!response.ok) {
@@ -44,13 +48,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 // Fetch tariff data
 async function getTariffData(slug: string) {
   try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
+    // Construct absolute URL for server-side fetching
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/tariff`, {
       cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     
     if (!response.ok) {
-      throw new Error('Failed to fetch tariff data');
+      console.error('Tariff fetch failed:', await response.text());
+      return null;
     }
     
     const data = await response.json();
@@ -84,12 +93,17 @@ export default async function TariffDetailPage({ params }: { params: Promise<{ s
 // Generate static params for better performance (optional)
 export async function generateStaticParams() {
   try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
+    // Construct absolute URL for server-side fetching
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/tariff`, {
       cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     
     if (!response.ok) {
+      console.error('Failed to fetch tariffs for static params');
       return [];
     }
     
@@ -100,6 +114,7 @@ export async function generateStaticParams() {
       slug: tariff.slug,
     }));
   } catch (error) {
+    console.error('Error generating static params:', error);
     return [];
   }
 }

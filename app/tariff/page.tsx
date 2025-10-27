@@ -18,14 +18,19 @@ export const metadata = {
 // Fetch tariff data from API
 async function getTariffData() {
   try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
+    // Construct absolute URL for server-side fetching
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/tariff`, {
       cache: 'no-store', // Always fetch fresh data
-      next: { revalidate: 0 }
+      next: { revalidate: 0 },
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     
     if (!response.ok) {
-      throw new Error('Failed to fetch tariff data');
+      console.error('Failed to fetch tariff data:', await response.text());
+      return [];
     }
     
     const data = await response.json();

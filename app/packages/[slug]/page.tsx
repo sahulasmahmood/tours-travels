@@ -12,18 +12,23 @@ interface PageProps {
 // Fetch single package by slug
 async function getPackageBySlug(slug: string) {
   try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
+    // Construct absolute URL for server-side fetching
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/packages`, {
       cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     
     if (!response.ok) {
-      throw new Error('Failed to fetch packages');
+      console.error('Package fetch failed:', await response.text());
+      return null;
     }
     
     const result = await response.json();
     if (!result.success) {
-      throw new Error('API returned error');
+      return null;
     }
     
     // Find package by slug
@@ -39,10 +44,16 @@ async function getPackageBySlug(slug: string) {
 // Generate static params for all packages
 export async function generateStaticParams() {
   try {
-    const baseUrl = process.env.APP_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/packages`);
+    // Construct absolute URL for server-side fetching
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/packages`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     
     if (!response.ok) {
+      console.error('Failed to fetch packages for static params');
       return [];
     }
     
