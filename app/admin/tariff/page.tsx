@@ -169,8 +169,34 @@ export default function TariffPage() {
     hasPrevPage: false,
   });
 
+  // Fetch vehicle types from API
+  const fetchVehicleTypes = async () => {
+    try {
+      const token = localStorage.getItem('admin_token');
+      if (!token) return;
+
+      const response = await axios.get('/api/admin/vehicle-types', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data.success) {
+        setVehicleTypes(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching vehicle types:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch vehicle types",
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     fetchServices(currentPage);
+    fetchVehicleTypes();
   }, [currentPage]);
 
   const [formData, setFormData] = useState({
@@ -307,6 +333,7 @@ export default function TariffPage() {
           }.`,
         });
         fetchServices(currentPage);
+        fetchVehicleTypes(); // Refresh vehicle types in case a new one was used
         handleCancel();
       } else {
         toast({
@@ -398,28 +425,52 @@ export default function TariffPage() {
     }
 
     try {
-      // Simulate API call - replace with actual API later
-      const newVehicleType = {
-        _id: Date.now().toString(),
-        name: newVehicleTypeName.trim()
-      };
-      
-      setVehicleTypes([...vehicleTypes, newVehicleType]);
-      
-      toast({
-        title: "Vehicle Type Added",
-        description: "New vehicle type has been successfully added.",
-      });
-      setNewVehicleTypeName("");
-      setShowAddVehicleType(false);
-      setExplicitlyClosing(true);
-      setVehicleTypeDropdownOpen(false);
-      // Auto-select the newly added vehicle type
-      setFormData({ ...formData, vehicleType: newVehicleType.name });
-    } catch (error) {
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        toast({
+          title: "Authentication Error",
+          description: "Please login again",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const response = await axios.post('/api/admin/vehicle-types', 
+        { name: newVehicleTypeName.trim() },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        toast({
+          title: "Vehicle Type Added",
+          description: "New vehicle type has been successfully added.",
+        });
+        
+        // Refresh vehicle types list
+        await fetchVehicleTypes();
+        
+        setNewVehicleTypeName("");
+        setShowAddVehicleType(false);
+        setExplicitlyClosing(true);
+        setVehicleTypeDropdownOpen(false);
+        
+        // Auto-select the newly added vehicle type
+        setFormData({ ...formData, vehicleType: response.data.data.name });
+      } else {
+        toast({
+          title: "Error",
+          description: response.data.message || "Failed to add vehicle type",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to add vehicle type",
+        description: error.response?.data?.message || "Failed to add vehicle type",
         variant: "destructive",
       });
     }
@@ -436,29 +487,55 @@ export default function TariffPage() {
     }
 
     try {
-      // Simulate API call - replace with actual API later
-      setVehicleTypes(vehicleTypes.map(type => 
-        type._id === editingVehicleType.id 
-          ? { ...type, name: editVehicleTypeName.trim() }
-          : type
-      ));
-      
-      toast({
-        title: "Vehicle Type Updated",
-        description: "Vehicle type has been successfully updated.",
-      });
-      setEditingVehicleType(null);
-      setEditVehicleTypeName("");
-      setExplicitlyClosing(true);
-      setVehicleTypeDropdownOpen(false);
-      // Update form data if the edited vehicle type was selected
-      if (formData.vehicleType === editingVehicleType.name) {
-        setFormData({ ...formData, vehicleType: editVehicleTypeName.trim() });
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        toast({
+          title: "Authentication Error",
+          description: "Please login again",
+          variant: "destructive",
+        });
+        return;
       }
-    } catch (error) {
+
+      const response = await axios.put(
+        `/api/admin/vehicle-types/${editingVehicleType.id}`,
+        { name: editVehicleTypeName.trim() },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        toast({
+          title: "Vehicle Type Updated",
+          description: "Vehicle type has been successfully updated.",
+        });
+        
+        // Refresh vehicle types list
+        await fetchVehicleTypes();
+        
+        setEditingVehicleType(null);
+        setEditVehicleTypeName("");
+        setExplicitlyClosing(true);
+        setVehicleTypeDropdownOpen(false);
+        
+        // Update form data if the edited vehicle type was selected
+        if (formData.vehicleType === editingVehicleType.name) {
+          setFormData({ ...formData, vehicleType: response.data.data.name });
+        }
+      } else {
+        toast({
+          title: "Error",
+          description: response.data.message || "Failed to update vehicle type",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to update vehicle type",
+        description: error.response?.data?.message || "Failed to update vehicle type",
         variant: "destructive",
       });
     }
@@ -466,26 +543,68 @@ export default function TariffPage() {
 
   const handleDeleteVehicleType = async (vehicleTypeId: string) => {
     try {
-      // Simulate API call - replace with actual API later
-      const vehicleTypeToDelete = vehicleTypes.find(type => type._id === vehicleTypeId);
-      setVehicleTypes(vehicleTypes.filter(type => type._id !== vehicleTypeId));
-      
-      toast({
-        title: "Vehicle Type Deleted",
-        description: "Vehicle type has been successfully deleted.",
-      });
-      setDeletingVehicleTypeId(null);
-      
-      // Clear form data if the deleted vehicle type was selected
-      if (formData.vehicleType === vehicleTypeToDelete?.name) {
-        setFormData({ ...formData, vehicleType: "" });
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        toast({
+          title: "Authentication Error",
+          description: "Please login again",
+          variant: "destructive",
+        });
+        return;
       }
-    } catch (error) {
+
+      const vehicleTypeToDelete = vehicleTypes.find(type => type._id === vehicleTypeId);
+      
+      // Check if any services are using this vehicle type
+      const servicesUsingType = services.filter(
+        service => service.vehicleType === vehicleTypeToDelete?.name
+      );
+
+      if (servicesUsingType.length > 0) {
+        toast({
+          title: "Cannot Delete",
+          description: `This vehicle type is used by ${servicesUsingType.length} service(s). Please update or delete those services first.`,
+          variant: "destructive",
+        });
+        setDeletingVehicleTypeId(null);
+        return;
+      }
+
+      const response = await axios.delete(`/api/admin/vehicle-types/${vehicleTypeId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data.success) {
+        toast({
+          title: "Vehicle Type Deleted",
+          description: "Vehicle type has been successfully deleted.",
+        });
+        
+        // Refresh vehicle types list
+        await fetchVehicleTypes();
+        
+        setDeletingVehicleTypeId(null);
+        
+        // Clear form data if the deleted vehicle type was selected
+        if (formData.vehicleType === vehicleTypeToDelete?.name) {
+          setFormData({ ...formData, vehicleType: "" });
+        }
+      } else {
+        toast({
+          title: "Error",
+          description: response.data.message || "Failed to delete vehicle type",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to delete vehicle type",
+        description: error.response?.data?.message || "Failed to delete vehicle type",
         variant: "destructive",
       });
+      setDeletingVehicleTypeId(null);
     }
   };
 
